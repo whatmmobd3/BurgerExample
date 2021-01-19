@@ -1,27 +1,77 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Aux from '../../hoc/Aux1';
-import Burger from '../../components/Burger/Burger';
+import Aux from "../../hoc/Aux1";
+import Burger from "../../components/Burger/Burger";
+import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 
+const INGREDIENT_PRICES={
+    salad: 0.2,
+    tomato: 0.2,
+    cheese: 0.4,
+    meat: 1,
+}
 class BurgerBuilder extends Component {
-    state = {
-        ingredients: {
-            salad: 0,
-            tomato: 0,
-            cheese: 0,
-            meat: 0
-        }
-    }
+  state = {
+    ingredients: {
+      salad: 3,
+      tomato: 2,
+      cheese: 4,
+      meat: 0,
+    },
+    totalPrice: 2,
+    purchasable: false,
+  };
 
-    render () {
-        const {ingredients} = this.state
-        return (
-            <Aux>
-                <Burger ingredients={ingredients} />
-                <div>Build Controls</div>
-            </Aux>
-        );
-    }
+  updatePurchase = e => {
+      const sum = Object.keys(e)
+      .map(c => {
+          return e[c]
+      })
+      .reduce((sum, el) => {
+          return sum + el
+      }, 0)
+      this.setState({purchasable: sum > 0})
+  }
+
+  addIngredient = (e) => {
+      const updateCount = this.state.ingredients[e] + 1
+      const updateIngredients = {...this.state.ingredients}
+
+      updateIngredients[e] = updateCount
+      const priceAddition = INGREDIENT_PRICES[e]
+      const newPrice = this.state.totalPrice + priceAddition
+
+      this.setState({totalPrice: newPrice, ingredients: updateIngredients})
+      this.updatePurchase(updateIngredients)
+  }
+  removeIngredient = (e) => {
+      
+      const updateCount = this.state.ingredients[e] -1
+      const updateIngredients = {...this.state.ingredients}
+
+      updateIngredients[e] = updateCount
+      const priceAddition = INGREDIENT_PRICES[e]
+      const newPrice = this.state.totalPrice + priceAddition
+
+      this.setState({totalPrice: newPrice, ingredients: updateIngredients})
+      this.updatePurchase(updateIngredients)
+  }
+
+  render() {
+    const { ingredients, totalPrice, purchasable } = this.state;
+    return (
+      <Aux>
+        <Burger ingredients={ingredients} />
+        <BuildControls
+          ingredientAdded={this.addIngredient}
+          ingredientRemoved={this.removeIngredient}
+          price={totalPrice}
+          disabled={purchasable}
+        //   order={this.orderHandler}
+        />
+      </Aux>
+    );
+  }
 }
 
 export default BurgerBuilder;
