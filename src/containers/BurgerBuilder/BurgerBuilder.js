@@ -55,7 +55,7 @@ class BurgerBuilder extends Component {
 
     updateIngredients[e] = updateCount;
     const priceAddition = INGREDIENT_PRICES[e];
-    const newPrice = this.state.totalPrice + priceAddition;
+    const newPrice = this.state.totalPrice - priceAddition;
 
     this.setState({ totalPrice: newPrice, ingredients: updateIngredients });
     this.updatePurchase(updateIngredients);
@@ -73,7 +73,6 @@ class BurgerBuilder extends Component {
     for(let e in disabledInfo){
       disabledInfo[e] = disabledInfo[e] <1
     }
-    console.log(disabledInfo);
     return (
       <Aux>
         <Burger ingredients={ingredients} />
