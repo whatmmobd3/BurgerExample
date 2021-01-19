@@ -21,7 +21,7 @@ const burger = (props) => {
   let element = Object.keys(props.ingredients)
     .map((e) => {
       return [...Array(props.ingredients[e])].map((_, i) => {
-        return <BurgerIngredient key={e} type={e} />;
+        return <BurgerIngredient key={e + i} type={e} />;
       });
     })
     .reduce((arr, el) => {
